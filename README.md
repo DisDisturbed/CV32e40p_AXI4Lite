@@ -1,42 +1,40 @@
 CV32E40P AXI4-Lite Integration
-This repository provides an implementation of the CV32E40P RISC-V core interfaced with an AXI4-Lite bus. The project is structured for easy integration into Xilinx Vivado environments and includes verified test cases for memory-mapped operations.
+This repository provides an integrated RTL implementation of the CV32E40P (formerly RI5CY) RISC-V core interfaced with a standard AXI4-Lite bus. The design is organized for immediate integration into Xilinx Vivado and includes hardware-software co-design examples to verify memory-mapped operations.
 
-Directory Structure
-RTL/: Contains the SystemVerilog source files for the core and bus logic.
+📂 Project Structure
+Plaintext
+├── RTL/
+│   ├── common_cells/       # Global headers (.svh) and shared IP components
+│   ├── core/               # CV32E40P core source files
+│   └── axi_wrapper/        # AXI4-Lite interface logic
+└── CODES/                  # Software benchmarks for hardware verification
+    ├── aes/                # Advanced Encryption Standard test
+    └── bubblesort/         # Sorting algorithm test
+🛠 Vivado Integration & Setup
+To successfully synthesize and simulate the project in Vivado, the tool must be configured to recognize the shared headers inside the common_cells directory.
 
-common_cells/: A dedicated subdirectory for shared header files (.svh) and common IP components.
+Run the following commands in the Vivado TCL Console:
 
-CODES/: Software benchmarks used for hardware verification.
-
-aes/: Advanced Encryption Standard implementation.
-
-bubblesort/: Standard sorting algorithm test.
-
-Vivado Setup & Header Integration
-To ensure Vivado correctly identifies the global headers and includes within the common_cells folder, follow these steps in the TCL Console:
-
-1. Define the Include Path
-Set the path variable pointing to your RTL directory (adjust the string to match your local machine's path):
+1. Define the Global Include Path
+Note: Ensure the path points directly to the common_cells folder, not just the root RTL folder.
 
 Tcl
-set include_path "/path/to/your/RTL/folder/" 
-2. Apply to Simulation
-Enable the headers for the simulation environment:
+set include_path "/path/to/your/RTL/common_cells/"
+2. Apply to Simulation Fileset
+Allow the simulator to resolve the global headers:
 
 Tcl
 set_property include_dirs $include_path [get_filesets sim_1]
-3. Apply to Synthesis
-Enable the headers for the synthesis engine to ensure the bitstream generates correctly:
+3. Apply to Synthesis Fileset
+Ensure the synthesis engine includes the headers for accurate bitstream generation:
 
 Tcl
 set_property include_dirs $include_path [get_filesets sources_1]
-Verification & Testing
-The current system has been rigorously tested using an AXI4-Lite Slave Memory model. The hardware-software co-design successfully executes complex algorithms, ensuring the bus protocol timing and data integrity are maintained.
+✅ Verification & Testing
+The system is validated against an AXI4-Lite Slave Memory model. The core successfully executes compiled C-code benchmarks, confirming the integrity of instruction fetches, load/store operations, and AXI4-Lite bus protocol compliance.
 
-Verified Benchmarks:
+Included Benchmarks (located in CODES/):
 
-AES: Validates complex data processing and intensive memory access.
+AES: Stresses the core with intensive logic operations and frequent memory accesses to validate data integrity.
 
-Bubblesort: Confirms basic load/store operations and branching logic accuracy.
-
-Note: All benchmark source code and compiled binaries can be found in the CODES/ directory.
+Bubblesort: Validates basic sequential load/store operations, loop unrolling, and branching accuracy.
