@@ -19,7 +19,7 @@ To ensure Vivado correctly identifies the global headers and includes within the
 Set the path variable pointing to your RTL directory (adjust the string to match your local machine's path):
 
 Tcl
-set include_path "/path/to/your/RTL/folder/"
+set include_path "/path/to/your/RTL/folder/" 
 2. Apply to Simulation
 Enable the headers for the simulation environment:
 
